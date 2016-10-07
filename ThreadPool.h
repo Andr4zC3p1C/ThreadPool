@@ -104,7 +104,7 @@ public:
 
 	unsigned int& getNumThreads()
 	{
-        return m_numThreads;
+        	return m_numThreads;
 	}
 
 private:
