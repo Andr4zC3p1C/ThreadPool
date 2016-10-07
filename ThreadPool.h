@@ -13,7 +13,8 @@
 // A mutex protected printf wrapper function for debugging
 std::mutex console_mutex;
 template<typename... T>
-void tp_printf(const char* str, T... args) {
+void tp_printf(const char* str, T... args) 
+{
 	console_mutex.lock();
 	printf(str, args...);
 	console_mutex.unlock();
