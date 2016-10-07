@@ -8,15 +8,15 @@
 #include <mutex>
 #include <condition_variable>
 
-#include <string>
-#include <iostream>
+#include <stdio.h>
 
-// A mutex protected printf function for debugging
+// A mutex protected printf wrapper function for debugging
 std::mutex console_mutex;
 template<typename... T>
 void tp_printf(const char* str, T... args) {
-	std::unique_lock<std::mutex> console_lock(console_mutex);
+	console_mutex.lock();
 	printf(str, args...);
+	console_mutex.unlock();
 }
 
 /*
@@ -37,7 +37,8 @@ public:
 	/*
 		Creates either as many threads as the user specifies, or as many as there are logical CPU cores if not specified
 	*/
-	ThreadPool(unsigned int numThreads = std::thread::hardware_concurrency())
+	ThreadPool(unsigned int numThreads = std::thread::hardware_concurrency()) :
+	    m_numThreads(numThreads)
 	{
 		for (unsigned int i = 0; i < numThreads; i++)
 		{
@@ -61,13 +62,14 @@ public:
 					}
 
 					task->run();
+					delete task;
 				}
 			});
 		}
 	}
 
 	/*
-		Notifies all threads that they should stop and joins them 
+		Notifies all threads that they should stop and joins them
 	*/
 	~ThreadPool()
 	{
@@ -75,7 +77,7 @@ public:
 			std::unique_lock<std::mutex> lock(m_queueMutex);
 			m_done = true;
 		}
-		
+
 		m_condVariable.notify_all();
 
 		for(unsigned int i = 0; i < m_threads.size(); i++)
@@ -84,7 +86,10 @@ public:
 		}
 	}
 
-	void addTask(ThreadTask *newTask)
+	/*
+		Pushes the new task to the end of the queue and notifies 1 thread about it if there is any
+	*/
+	void pushTask(ThreadTask *newTask)
 	{
 		if(!m_done)
 		{
@@ -97,10 +102,16 @@ public:
 		}
 	}
 
+	unsigned int& getNumThreads()
+	{
+        return m_numThreads;
+	}
+
 private:
 	std::queue<ThreadTask*> m_taskQueue;
 	std::vector<std::thread> m_threads;
 
+	unsigned int m_numThreads;
 	bool m_done = false;
 	std::mutex m_queueMutex;
 	std::condition_variable m_condVariable;
