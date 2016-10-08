@@ -35,7 +35,7 @@ SOFTWARE.
 #include <stdio.h>
 
 // A mutex protected printf wrapper function for debugging
-std::mutex console_mutex;
+static std::mutex console_mutex;
 template<typename... T>
 void tp_printf(const char* str, T&&... args)
 {
