@@ -25,7 +25,7 @@ int main()
 ```
 
 Default constructor creates as many threads as there are processor cores (recommended).
-A custom number of threads can be specified by the user using the secondary constructor by passing the value of threads in the constructor.
+A custom number of threads can be specified by passing the number of threads in the constructor.
 
 The *ThreadTask* class is an interface for tasks, meaning one can program a task by simply inheriting the *ThreadTask* class and overriding the abstract method *run*. When creating the task object one must allocate it dynamically on the heap. 
 
