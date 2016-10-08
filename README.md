@@ -10,17 +10,17 @@ A *thread pool* is a set of threads which get work from a queue of tasks. When a
 class ExampleTask : public ThreadTask // an example task which only prints out "example"
 {
 public:
-  virtual void run()
-  {
-    tp_printf("example");
-  };
+    virtual void run()
+    {
+        tp_printf("example");
+    };
 };
 
 int main()
 {
-  ThreadPool tp;
+    ThreadPool tp;
   
-  tp.pushTask(new ExampleTask); // creating and pushing an example task
+    tp.pushTask(new ExampleTask); // creating and pushing an example task
 }
 ```
 
