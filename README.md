@@ -4,7 +4,7 @@ A simple C++11 thread pool library.
 A *thread pool* is a set of threads which get work from a queue of tasks. When a thread finishes a task it then checkes if there is any work(task queue is not empty), gets the task from the front of the queue and then executes the task itself. For the sake of simplicity I decided to implement task by creating an abstract class *ThreadTask* which serves as an interface between the user and the thread pool for tasks. 
 
 # Usage
-<code>
+```c++
 #include "ThreadPool.h" // including the library
 
 class ExampleTask : public ThreadTask // an example task which only prints out "example"
@@ -22,7 +22,8 @@ int main()
   
   tp.pushTask(new ExampleTask); // creating and pushing an example task
 }
-</code>
+```
+
 Default constructor creates as many threads as there are processor cores (recommended).
 A custom number of threads can be specified by the user using the secondary constructor by passing the value of threads in the constructor.
 
